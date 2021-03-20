@@ -21,7 +21,6 @@ services:
       - type: bind
         source: ~/.local/share/nvim
         target: /home/dev/.local/share/nvim
-        read_only: false
     working_dir: /workspace
     deploy:
       restart_policy:
