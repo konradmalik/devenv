@@ -8,25 +8,56 @@ add-apt-repository ppa:neovim-ppa/unstable
 eval $APT_INSTALL neovim
 # add and install nodejs (nodejs contains npm package here)
 curl -sL https://deb.nodesource.com/setup_$node_version.x | bash -
-eval $APT_INSTALL nodejs 
+eval $APT_INSTALL nodejs
+# treesitter for language syntax
+npm install -g tree-sitter-cli --unsafe-perm=true
 
 # install language servers
 # python
-eval $APT_INSTALL python3 python3-pip python-is-python3
-npm install -g pyright tree-sitter-cli --unsafe-perm=true
-eval $PIP_INSTALL virtualenv
+if [ -z "$enable_python" ]
+then
+    echo "\$enable_python is empty, not installing"
+else
+    echo "\$enable_python is set, installing"
+	add-apt-repository ppa:deadsnakes/ppa
+	eval $APT_INSTALL \
+        python-is-python3 \
+        python${python_version} \
+        python${python_version}-dev \
+        python3-distutils-extra
+    curl -L -o ~/get-pip.py \
+        https://bootstrap.pypa.io/get-pip.py
+    python${python_version} ~/get-pip.py
+    rm -f ~/get-pip.py
+    npm install -g pyright
+    eval $PIP_INSTALL virtualenv
+fi
+
 # go
-eval $APT_INSTALL golang
-su - dev -c "go get golang.org/dl/go$go_version"
-su - dev -c "$GOPATH/bin/go$go_version download"
+if [ -z "$enable_go" ]
+then
+    echo "\$enable_go is empty, not installing"
+else
+    echo "\$enable_go is set, installing"
+    eval $APT_INSTALL golang
+    su - dev -c "go get golang.org/dl/go$go_version"
+    su - dev -c "$GOPATH/bin/go$go_version download"
+fi
+
 # rust
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain=stable
-curl -L https://github.com/rust-analyzer/rust-analyzer/releases/latest/download/rust-analyzer-linux -o /usr/local/bin/rust-analyzer
-chmod +x /usr/local/bin/rust-analyzer
+if [ -z "$enable_rust" ]
+then
+    echo "\$enable_rust is empty, not installing"
+else
+    echo "\$enable_rust is set, installing"
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain=stable
+    curl -L https://github.com/rust-analyzer/rust-analyzer/releases/latest/download/rust-analyzer-linux -o /usr/local/bin/rust-analyzer
+    chmod +x /usr/local/bin/rust-analyzer
+fi
 
 # cleanup
 rm -rf /var/lib/apt/lists/* \
 /etc/apt/sources.list.d/cuda.list \
 /etc/apt/sources.list.d/nvidia-ml.list 
 
-#RUN nvim --headless +PackerInstall +q
+#nvim --headless +PackerInstall +q

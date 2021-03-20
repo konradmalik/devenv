@@ -11,9 +11,15 @@ ENV LANG=C.UTF-8 \
 RUN groupadd -f dev && useradd dev -g dev -ms /bin/bash
 WORKDIR /home/dev
 
-ARG go_version=1.16.2
-ARG node_version=14
 COPY devenv_setup.sh devenv_setup.sh
+
+ARG go_version=1.16.2
+ARG python_version=3.8
+ARG node_version=14
+ARG enable_python
+ARG enable_go
+ARG enable_rust
+
 RUN ./devenv_setup.sh && rm devenv_setup.sh
 
 # place current user and group id here to have no permission errors after editing files

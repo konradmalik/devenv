@@ -10,6 +10,9 @@ services:
       args:
         uid: $uid
         gid: $gid
+        enable_python: $enable_python
+        enable_go: $enable_go
+        enable_rust: $enable_rust
     volumes:
       - type: bind
         source: ./
