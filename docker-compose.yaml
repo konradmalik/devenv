@@ -1,0 +1,28 @@
+version: "3"
+
+services:
+  dev:
+    container_name: dev
+    entrypoint: /bin/bash
+    build:
+      context: .
+      target: dev
+      args:
+        uid: $uid
+        gid: $gid
+    volumes:
+      - type: bind
+        source: ./
+        target: /workspace
+      - type: bind
+        source: ~/Code/dotfiles/neovim
+        target: /home/dev/.config/nvim
+        read_only: true
+      - type: bind
+        source: ~/.local/share/nvim
+        target: /home/dev/.local/share/nvim
+        read_only: false
+    working_dir: /workspace
+    deploy:
+      restart_policy:
+        condition: on-failure
