@@ -3,7 +3,8 @@ version: "3"
 services:
   dev:
     container_name: dev
-    entrypoint: /bin/bash
+    hostname: dev-container
+    image: konradmalik/devenv
     build:
       context: .
       target: dev
@@ -13,6 +14,8 @@ services:
         enable_python: $enable_python
         enable_go: $enable_go
         enable_rust: $enable_rust
+        enable_tex: $enable_tex
+    entrypoint: /bin/bash
     volumes:
       - type: bind
         source: ./

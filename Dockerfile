@@ -19,6 +19,7 @@ ARG node_version=14
 ARG enable_python
 ARG enable_go
 ARG enable_rust
+ARG enable_tex
 
 RUN ./devenv_setup.sh && rm devenv_setup.sh
 

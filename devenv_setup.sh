@@ -3,6 +3,8 @@ set -e
 
 # install prerequisites
 eval $APT_INSTALL software-properties-common make curl gpg-agent git
+eval $APT_INSTALL -o Dpkg::Options::="--force-overwrite" bat ripgrep
+
 # add neovim repo and install prereqs
 add-apt-repository ppa:neovim-ppa/unstable
 eval $APT_INSTALL neovim
@@ -55,9 +57,26 @@ else
     chmod +x /usr/local/bin/rust-analyzer
 fi
 
+# tex
+if [ -z "$enable_tex" ]
+then
+    echo "\$enable_tex is empty, not installing"
+else
+    echo "\$enable_tex is set, installing"
+    PLATFORM=$(uname | tr '[:upper:]' '[:lower:]')
+    VERSION=$(curl -s "https://github.com/latex-lsp/texlab/releases/latest/download" 2>&1 | sed "s/^.*download\/\([^\"]*\).*/\1/")
+    echo "Found texlab version: $VERSION"
+    TEMP_FILE="$(mktemp)" \
+    && TEMP_FOLDER="$(mktemp -d)" \
+    && curl -o "$TEMP_FILE" -L "https://github.com/latex-lsp/texlab/releases/download/$VERSION/texlab-x86_64-$PLATFORM.tar.gz" \
+    && tar xvzf "$TEMP_FILE" --directory="$TEMP_FOLDER/" \
+    && mv "$TEMP_FOLDER/texlab" /usr/local/bin/ \
+    && rm -rf "$TEMP_FILE" \
+    && rm -rf "$TEMP_FOLDER"
+    chmod +x /usr/local/bin/texlab
+fi
+
 # cleanup
 rm -rf /var/lib/apt/lists/* \
 /etc/apt/sources.list.d/cuda.list \
 /etc/apt/sources.list.d/nvidia-ml.list 
-
-#nvim --headless +PackerInstall +q
