@@ -8,11 +8,6 @@ eval $APT_INSTALL -o Dpkg::Options::="--force-overwrite" bat ripgrep
 # add neovim repo and install prereqs
 add-apt-repository ppa:neovim-ppa/unstable
 eval $APT_INSTALL neovim
-# add and install nodejs (nodejs contains npm package here)
-curl -sL https://deb.nodesource.com/setup_$node_version.x | bash -
-eval $APT_INSTALL nodejs
-# treesitter for language syntax
-npm install -g tree-sitter-cli --unsafe-perm=true
 
 # install language servers
 # python
@@ -31,6 +26,9 @@ else
         https://bootstrap.pypa.io/get-pip.py
     python${python_version} ~/get-pip.py
     rm -f ~/get-pip.py
+    # add and install nodejs (nodejs contains npm package here)
+    curl -sL https://deb.nodesource.com/setup_$node_version.x | bash -
+    eval $APT_INSTALL nodejs
     npm install -g pyright
     eval $PIP_INSTALL virtualenv
 fi
