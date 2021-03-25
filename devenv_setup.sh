@@ -11,7 +11,8 @@ eval $APT_INSTALL -o Dpkg::Options::="--force-overwrite" bat ripgrep
 curl -LO https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage
 chmod u+x ./nvim.appimage
 ./nvim.appimage --appimage-extract
-mv ./squashfs-root/usr /usr
+# additional geek points
+(cd ./squashfs-root/usr && tar c .) | (cd /usr && tar xf -)
 rm -rf ./squashfs-root nvim.appimage
 
 # install language servers
