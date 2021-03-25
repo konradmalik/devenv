@@ -6,8 +6,13 @@ eval $APT_INSTALL software-properties-common make curl gpg-agent git
 eval $APT_INSTALL -o Dpkg::Options::="--force-overwrite" bat ripgrep
 
 # add neovim repo and install prereqs
-add-apt-repository ppa:neovim-ppa/unstable
-eval $APT_INSTALL neovim
+#add-apt-repository ppa:neovim-ppa/unstable
+#eval $APT_INSTALL neovim
+curl -LO https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage
+chmod u+x ./nvim.appimage
+./nvim.appimage --appimage-extract
+mv ./squashfs-root/usr /usr
+rm -rf ./squashfs-root nvim.appimage
 
 # install language servers
 # python

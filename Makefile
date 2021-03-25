@@ -1,5 +1,6 @@
 UID=$(shell id -u)
 GID=$(shell id -g)
+# below must be blank to disable!
 ENABLE_PYTHON=true
 ENABLE_GO=true
 ENABLE_RUST=true
