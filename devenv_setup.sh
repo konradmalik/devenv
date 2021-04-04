@@ -5,6 +5,12 @@ set -e
 eval $APT_INSTALL software-properties-common make curl gpg-agent git
 eval $APT_INSTALL -o Dpkg::Options::="--force-overwrite" bat ripgrep
 
+# precreate dirs in home so they wont be root
+su - dev -c "mkdir ~/.config"
+su - dev -c "mkdir ~/.cache"
+su - dev -c "mkdir ~/.local"
+su - dev -c "mkdir ~/.cargo"
+
 # add neovim repo and install prereqs
 #add-apt-repository ppa:neovim-ppa/unstable
 #eval $APT_INSTALL neovim
@@ -16,6 +22,13 @@ chmod u+x ./nvim.appimage
 rm -rf ./squashfs-root nvim.appimage
 
 # install language servers
+# efm - global for formatting only + prettier for json, yaml etc.
+# add and install nodejs (nodejs contains npm package here)
+curl -L https://github.com/mattn/efm-langserver/releases/latest/download/efm-langserver_v0.0.26_linux_amd64.tar.gz | tar xvfz - \
+&& mv **/efm-langserver /usr/local/bin/efm-langserver && rm -rf efm-langserver*
+curl -sL https://deb.nodesource.com/setup_$node_version.x | bash -
+eval $APT_INSTALL nodejs
+npm install -g prettier
 # python
 if [ -z "$enable_python" ]
 then
@@ -32,9 +45,6 @@ else
         https://bootstrap.pypa.io/get-pip.py
     python${python_version} ~/get-pip.py
     rm -f ~/get-pip.py
-    # add and install nodejs (nodejs contains npm package here)
-    curl -sL https://deb.nodesource.com/setup_$node_version.x | bash -
-    eval $APT_INSTALL nodejs
     npm install -g pyright
     eval $PIP_INSTALL virtualenv
 fi
@@ -48,6 +58,7 @@ else
     eval $APT_INSTALL golang
     su - dev -c "go get golang.org/dl/go$go_version"
     su - dev -c "$GOPATH/bin/go$go_version download"
+    su - dev -c "go get golang.org/x/tools/cmd/goimports"
 fi
 
 # rust

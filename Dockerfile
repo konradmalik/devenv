@@ -8,7 +8,7 @@ ENV LANG=C.UTF-8 \
     GIT_CLONE="git clone --depth 10" \
     GOPATH=/home/dev/go \
     PATH=$PATH:$GOPATH/bin
-RUN groupadd -f dev && useradd dev -g dev -ms /bin/bash
+RUN groupadd -f dev && useradd dev -g dev -m -s /bin/bash
 WORKDIR /home/dev
 
 COPY devenv_setup.sh devenv_setup.sh
