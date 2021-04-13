@@ -24,7 +24,7 @@ rm -rf ./squashfs-root nvim.appimage
 # install language servers
 # efm - global for formatting only + prettier for json, yaml etc.
 # add and install nodejs (nodejs contains npm package here)
-curl -L https://github.com/mattn/efm-langserver/releases/latest/download/efm-langserver_v0.0.26_linux_amd64.tar.gz | tar xvfz - \
+curl -L https://github.com/mattn/efm-langserver/releases/download/v0.0.29/efm-langserver_v0.0.29_linux_amd64.tar.gz | tar xvfz - \
 && mv **/efm-langserver /usr/local/bin/efm-langserver && rm -rf efm-langserver*
 curl -sL https://deb.nodesource.com/setup_$node_version.x | bash -
 eval $APT_INSTALL nodejs
